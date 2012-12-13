@@ -28,6 +28,7 @@ bool PlayField::itemMarked()
 
 void PlayField::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
+    Q_UNUSED(event);
     itemMarked();
 }
 

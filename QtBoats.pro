@@ -10,14 +10,16 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = QtBoats
 TEMPLATE = app
-
+QMAKE_CXXFLAGS += -std=c++11
 
 SOURCES += main.cpp\
         QtBoats.cpp \
     PlayArea.cpp \
-    PlayField.cpp
+    PlayField.cpp \
+    GameState.cpp
 
 HEADERS  += QtBoats.h \
     PlayArea.h \
     PlayField.h \
-    Table2D.h
+    Table2D.h \
+    GameState.h
