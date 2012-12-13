@@ -13,6 +13,11 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        QtBoats.cpp
+        QtBoats.cpp \
+    PlayArea.cpp \
+    PlayField.cpp
 
-HEADERS  += QtBoats.h
+HEADERS  += QtBoats.h \
+    PlayArea.h \
+    PlayField.h \
+    Table2D.h
