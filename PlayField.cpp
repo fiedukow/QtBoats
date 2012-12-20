@@ -1,4 +1,5 @@
 #include "PlayField.h"
+#include "PlayArea.h"
 #include <cassert>
 #include <cstdio>
 
@@ -29,7 +30,14 @@ bool PlayField::itemMarked()
 void PlayField::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
     Q_UNUSED(event);
-    itemMarked();
+    PlayArea* area = dynamic_cast<PlayArea*>(parentItem());
+    assert(area != NULL);
+
+    if(area->isHittable())
+    {
+      if(itemMarked())
+        area->hitted();
+    }
 }
 
 bool PlayField::setState(FieldState newState)
@@ -40,6 +48,12 @@ bool PlayField::setState(FieldState newState)
     state_ = newState;
     updateColor();
     return true;
+}
+
+void PlayField::setHidden(bool hidden)
+{
+  hidden_ = hidden;
+  updateColor();
 }
 
 void PlayField::updateColor()
@@ -53,6 +67,9 @@ void PlayField::updateColor()
         setBrush(QBrush(QColor(0, 0, 255)));
         return;
     case BOAT:
+      if(hidden_)
+        setBrush(QBrush(QColor(200, 200, 255)));
+      else
         setBrush(QBrush(QColor(0, 0, 0)));
         return;
     case HITTED_BOAT:

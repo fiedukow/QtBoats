@@ -12,8 +12,9 @@ public:
               qreal pxWidth, qreal pxHeight,
               QGraphicsItem* parent);
 
-    /* returns true if there was any change*/
+    /* returns true if there was any change */
     bool itemMarked();
+    void setHidden(bool hidden);
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent* event);
@@ -24,6 +25,7 @@ private:
 
 private:
     FieldState state_;
+    bool hidden_;
 };
 
 #endif // PLAYFIELD_H

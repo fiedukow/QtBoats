@@ -5,34 +5,41 @@
 #include <QGraphicsScene>
 
 #include "PlayArea.h"
+#include "GameState.h"
 
 QtBoats::QtBoats(QWidget *parent)
     : QMainWindow(parent),
-      currentArea_(NULL)
+      gameState_(NULL)
 {
     QToolBar* mainBar = new QToolBar;
     addToolBar(mainBar);
     newGameAction = new QAction(tr("New game"), mainBar);
+    nextTurnAction = new QAction(tr("Next turn"), mainBar);
     mainBar->addAction(newGameAction);
+    mainBar->addAction(nextTurnAction);
     mainPanel_ = new QGraphicsView(this);
-    scene_ = new QGraphicsScene(mainPanel_);
-    mainPanel_->setScene(scene_);
-    installNewArea();
     setCentralWidget(mainPanel_);
 
-    connect(newGameAction, SIGNAL(triggered()), this, SLOT(installNewArea()));
+    connect(newGameAction,
+            SIGNAL(triggered()),
+            this,
+            SLOT(newGame()));
+    connect(nextTurnAction,
+            SIGNAL(triggered()),
+            gameState_,
+            SLOT(gotoNextTurn()));
+
+    newGame();
 }
 
-void QtBoats::installNewArea()
+void QtBoats::newGame()
 {
-    if(currentArea_ != NULL)
-        scene_->removeItem(currentArea_);
-
-    currentArea_ = new PlayArea(10, 10, 0, 0, 400, 400, 20);
-    scene_->addItem(currentArea_);
+    delete gameState_;
+    gameState_ = new GameState(this);
+    mainPanel_->setScene(gameState_->getScene());
 }
 
 QtBoats::~QtBoats()
 {
-    
+    delete gameState_;
 }
