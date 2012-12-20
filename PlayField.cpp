@@ -10,9 +10,10 @@
 PlayField::PlayField(qreal pxX, qreal pxY,
                      qreal pxWidth, qreal pxHeight,
                      QGraphicsItem* parent)
-    : QGraphicsRectItem(pxX, pxY, pxWidth, pxHeight, parent),
+    : QGraphicsRectItem(0, 0, pxWidth, pxHeight, parent),
       state_(rand()%3 ? WATER : BOAT)
 {
+    setPos(pxX, pxY);
     setPen(QPen(Qt::NoPen));
     updateColor();
 }

@@ -11,24 +11,25 @@ PlayArea::PlayArea(uint width, uint height,
                    qreal pxWidth, qreal pxHeight,
                    qreal fieldMargin,
                    QGraphicsItem *parent) :
-    QGraphicsRectItem(pxX - fieldMargin,
-                      pxY - fieldMargin,
+    QGraphicsRectItem(0,
+                      0,
                       pxWidth+fieldMargin*2,
                       pxHeight+fieldMargin*2, parent),
-    width_(width),
-    height_(height),
+    width_(width+fieldMargin*2),
+    height_(height+fieldMargin*2),
     fieldMargin_(fieldMargin),
     fields_(width, height),
     hittable_(true)
 {
+    setPos(pxX, pxY);
     setBrush(QBrush(Qt::yellow));
     const qreal fieldWidth = pxWidth/width;
     const qreal fieldHeight = pxHeight/height;
 
     for(uint i = 0; i < width; ++i)
         for(uint j = 0; j < height; ++j)
-            fields_[i][j] = new PlayField(i*fieldWidth+pxX,
-                                          j*fieldHeight+pxY,
+            fields_[i][j] = new PlayField(i*fieldWidth+fieldMargin,
+                                          j*fieldHeight+fieldMargin,
                                           fieldWidth,
                                           fieldHeight,
                                           this);

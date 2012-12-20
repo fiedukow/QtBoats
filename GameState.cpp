@@ -13,6 +13,9 @@ GameState::GameState(QObject* parent)
   player2Area = new PlayArea(10, 10, 450, 0, 400, 400, 20);
   scene->addItem(player1Area);
   scene->addItem(player2Area);
+
+  QGraphicsTextItem* textItem = new QGraphicsTextItem;
+
   gotoNextTurn();
 }
 
