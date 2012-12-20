@@ -21,6 +21,9 @@ public:
 public slots:
   void gotoNextTurn();
 
+signals:
+  void sceneChanged();
+
 private:
   void endOfTurn();
 
@@ -29,6 +32,7 @@ private:
   PlayArea* player1Area;
   PlayArea* player2Area;
   QGraphicsScene* scene;
+  QGraphicsScene* sceneWaiting;
 
 public: //enums
   enum class Turn { PLAYER_1, WAITING_PLAYER_1, PLAYER_2, WAITING_PLAYER_2 };

@@ -19,6 +19,7 @@ public:
 
 public slots:
     void newGame();
+    void updateScene();
 
 private:
     QAction* newGameAction;

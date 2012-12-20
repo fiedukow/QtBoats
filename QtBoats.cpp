@@ -24,10 +24,6 @@ QtBoats::QtBoats(QWidget *parent)
             SIGNAL(triggered()),
             this,
             SLOT(newGame()));
-    connect(nextTurnAction,
-            SIGNAL(triggered()),
-            gameState_,
-            SLOT(gotoNextTurn()));
 
     newGame();
 }
@@ -36,7 +32,23 @@ void QtBoats::newGame()
 {
     delete gameState_;
     gameState_ = new GameState(this);
-    mainPanel_->setScene(gameState_->getScene());
+    updateScene();
+
+    connect(nextTurnAction,
+            SIGNAL(triggered()),
+            gameState_,
+            SLOT(gotoNextTurn()));
+
+    connect(gameState_,
+            SIGNAL(sceneChanged()),
+            this,
+            SLOT(updateScene()));
+
+}
+
+void QtBoats::updateScene()
+{
+  mainPanel_->setScene(gameState_->getScene());
 }
 
 QtBoats::~QtBoats()

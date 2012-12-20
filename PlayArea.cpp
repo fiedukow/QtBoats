@@ -41,8 +41,9 @@ void PlayArea::setHiddenShips(bool hidden)
   QListIterator<QGraphicsItem*> it(childs);
   while(it.hasNext())
   {
-    assert(dynamic_cast<PlayField*>(it.next()) != NULL);
-    dynamic_cast<PlayField*>(it.next())->setHidden(hidden);
+    PlayField* item = dynamic_cast<PlayField*>(it.next());
+    assert(item != NULL);
+    item->setHidden(hidden);
   }
 }
 
