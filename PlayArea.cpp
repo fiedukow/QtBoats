@@ -4,6 +4,8 @@
 #include <QColor>
 #include <QList>
 
+#include <cassert>
+
 PlayArea::PlayArea(uint width, uint height,
                    qreal pxX, qreal pxY,
                    qreal pxWidth, qreal pxHeight,
@@ -39,6 +41,7 @@ void PlayArea::setHiddenShips(bool hidden)
   QListIterator<QGraphicsItem*> it(childs);
   while(it.hasNext())
   {
+    assert(dynamic_cast<PlayField*>(it.next()) != NULL);
     dynamic_cast<PlayField*>(it.next())->setHidden(hidden);
   }
 }
