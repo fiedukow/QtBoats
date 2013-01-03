@@ -77,6 +77,8 @@ void GameState::chooseField(int x, int y, PlayArea* area)
   case State::WAR:
     area->hitField(x, y);
   break;
+  default:
+  break;
   }
 }
 
@@ -132,6 +134,25 @@ bool GameState::isAnyHittable()
   return (player1Area->isHittable() || player2Area->isHittable());
 }
 
+void GameState::currentPlayerWon()
+{
+  assert(currentState_ == State::WAR);
+  switch(currentTurn_)
+  {
+  case Turn::PLAYER_1:
+    showUserMessage("PLAYER 1 WON!");
+    break;
+  case Turn::PLAYER_2:
+    showUserMessage("PLAYER 2 WON!");
+    break;
+  default:
+    assert(false);
+  }
+  currentState_ = nextState(currentState_);
+  player1Area->setAsAlly();
+  player2Area->setAsAlly();
+}
+
 void GameState::endOfTurn()
 {
     switch(currentState_)
@@ -169,12 +190,16 @@ void GameState::endOfTurn()
       currentTurn_ = nextTurn(currentTurn_);
       break;
     default:
+      currentTurn_ = nextTurn(currentTurn_);
       break;
     }
 }
 
 void GameState::gotoNextTurn()
 {
+  if(currentState_ == State::END_OF_GAME)
+    return;
+
   switch(currentTurn_)
   {
   case Turn::WAITING_PLAYER_1:

@@ -160,6 +160,15 @@ void PlayArea::revealSunked(int x, int y, std::list< std::pair<int,int> > stack)
   }
 }
 
+bool PlayArea::isGameFinished()
+{
+  for(int i = 0; i < (int)width_; ++i)
+    for(int j = 0; j < (int)height_; ++j)
+      if(fields_[i][j]->isLiveBoat())
+        return false;
+  return true;
+}
+
 void PlayArea::hitField(int x, int y)
 {
   if(x < 0 || x >= (int)width_ || y < 0 || y >= (int)height_)
@@ -198,7 +207,12 @@ void PlayArea::hitField(int x, int y)
     /*ZATOPIONY*/
     for(int i = -1; i <= 1; ++i)
       for(int j = -1; j <= 1; ++j)
+      {
         hitField(x+i, y+j);
+      }
+
+    if(isGameFinished())
+      gameState_->currentPlayerWon();
   }
 }
 

@@ -31,6 +31,7 @@ public:
 public slots:
   void gotoNextTurn();
   void chooseField(int x, int y, PlayArea *area);
+  void currentPlayerWon();
 
 signals:
   void sceneChanged();

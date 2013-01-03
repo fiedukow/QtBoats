@@ -25,6 +25,7 @@ public:
     void setHiddenShips(bool);
     void hitted();
     bool isHittable();
+    bool isGameFinished();
     void setHittable(bool value = true);
     void chooseField(int x, int y);
     void placeBoat(int x, int y);
