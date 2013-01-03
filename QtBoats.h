@@ -26,6 +26,7 @@ public slots:
 private:
     QAction* newGameAction;
     QAction* nextTurnAction;
+    QAction* settingsAction;
     QGraphicsView* mainPanel_;
     GameState* gameState_;
     QLabel* statusBarLabel_;

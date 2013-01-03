@@ -35,20 +35,20 @@ GameState::~GameState()
 void GameState::giveBoatsToPlayers()
 {
   player1Boats.push_back(4);
-  /*player1Boats.push_back(3);
+  player1Boats.push_back(3);
   player1Boats.push_back(3);
   player1Boats.push_back(2);
   player1Boats.push_back(2);
   player1Boats.push_back(1);
   player1Boats.push_back(1);
-*/
+
   player2Boats.push_back(4);
-  /*player2Boats.push_back(3);
+  player2Boats.push_back(3);
   player2Boats.push_back(3);
   player2Boats.push_back(2);
   player2Boats.push_back(2);
   player2Boats.push_back(1);
-  player2Boats.push_back(1);*/
+  player2Boats.push_back(1);
 }
 
 QGraphicsScene* GameState::getScene()

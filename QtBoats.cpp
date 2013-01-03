@@ -17,8 +17,10 @@ QtBoats::QtBoats(QWidget *parent)
     addToolBar(mainBar);
     newGameAction = new QAction(tr("New game"), mainBar);
     nextTurnAction = new QAction(tr("Next turn"), mainBar);
+    settingsAction = new QAction(tr("Settings"), mainBar);
     mainBar->addAction(newGameAction);
     mainBar->addAction(nextTurnAction);
+    mainBar->addAction(settingsAction);
     mainPanel_ = new QGraphicsView(this);
     setCentralWidget(mainPanel_);
 
