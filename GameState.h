@@ -4,6 +4,8 @@
 #include "PlayArea.h"
 #include <QObject>
 
+class QGraphicsTextItem;
+
 class GameState : public QObject
 {
   Q_OBJECT
@@ -17,6 +19,7 @@ public:
   ~GameState();
 
   QGraphicsScene* getScene();
+  void showUserMessage(const QString& msg);
 
 public slots:
   void gotoNextTurn();
@@ -33,6 +36,7 @@ private:
   PlayArea* player2Area;
   QGraphicsScene* scene;
   QGraphicsScene* sceneWaiting;
+  QGraphicsTextItem* waitingMessage;
 
 public: //enums
   enum class Turn { PLAYER_1, WAITING_PLAYER_1, PLAYER_2, WAITING_PLAYER_2 };

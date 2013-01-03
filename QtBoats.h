@@ -6,6 +6,7 @@
 class QAction;
 class QGraphicsView;
 class QGraphicsScene;
+class QLabel;
 class PlayArea;
 class GameState;
 
@@ -20,12 +21,14 @@ public:
 public slots:
     void newGame();
     void updateScene();
+    void setStatusBarMessage(const QString& msg);
 
 private:
     QAction* newGameAction;
     QAction* nextTurnAction;
     QGraphicsView* mainPanel_;
     GameState* gameState_;
+    QLabel* statusBarLabel_;
 };
 
 #endif // QTBOATS_H

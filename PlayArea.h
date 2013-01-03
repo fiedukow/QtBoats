@@ -7,6 +7,7 @@
 
 
 class PlayField;
+class GameState;
 
 class PlayArea : public QGraphicsRectItem
 {
@@ -15,23 +16,29 @@ public:
              qreal pxX, qreal pxY,
              qreal pxWidth, qreal pxHeight,
              qreal fieldMargin,
-             QGraphicsItem *parent = 0);
+             GameState* gameState,
+             QGraphicsItem *parent = 0
+             );
 
     void setHiddenShips(bool);
     void hitted();
     bool isHittable();
     void setHittable(bool value = true);
+    void hitField(int x, int y);
+    void setAsAlly();
+    void setAsEnemy();
 
 signals:
 
 public slots:
 
 private:
-    uint width_;
-    uint height_;
-    qreal fieldMargin_;
+    const uint width_;
+    const uint height_;
+    const qreal fieldMargin_;
     Table2D<PlayField*> fields_;
     bool hittable_;
+    GameState* gameState_;
 };
 
 #endif // PLAYAREA_H

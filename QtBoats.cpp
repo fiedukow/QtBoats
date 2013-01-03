@@ -3,6 +3,8 @@
 #include <QAction>
 #include <QGraphicsView>
 #include <QGraphicsScene>
+#include <QStatusBar>
+#include <QLabel>
 
 #include "PlayArea.h"
 #include "GameState.h"
@@ -24,6 +26,12 @@ QtBoats::QtBoats(QWidget *parent)
             SIGNAL(triggered()),
             this,
             SLOT(newGame()));
+
+    QStatusBar* statusBar = new QStatusBar(this);
+    setStatusBar(statusBar);
+    statusBarLabel_ = new QLabel(statusBar);
+    statusBar->addWidget(statusBarLabel_);
+    setStatusBarMessage("Welcome!");
 
     newGame();
 }
@@ -49,6 +57,11 @@ void QtBoats::newGame()
 void QtBoats::updateScene()
 {
   mainPanel_->setScene(gameState_->getScene());
+}
+
+void QtBoats::setStatusBarMessage(const QString& msg)
+{
+  statusBarLabel_->setText(msg);
 }
 
 QtBoats::~QtBoats()

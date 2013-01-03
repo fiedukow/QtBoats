@@ -10,11 +10,15 @@ public:
 public:
     PlayField(qreal pxX, qreal pxY,
               qreal pxWidth, qreal pxHeight,
+              int x, int y,
               QGraphicsItem* parent);
 
     /* returns true if there was any change */
-    bool itemMarked();
+    bool markItem();
     void setHidden(bool hidden);
+
+    bool isLiveBoat();
+    bool isDeadBoat();
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent* event);
@@ -26,6 +30,8 @@ private:
 private:
     FieldState state_;
     bool hidden_;
+    const int x;
+    const int y;
 };
 
 #endif // PLAYFIELD_H

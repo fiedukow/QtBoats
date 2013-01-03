@@ -9,16 +9,18 @@
 
 PlayField::PlayField(qreal pxX, qreal pxY,
                      qreal pxWidth, qreal pxHeight,
+                     int x, int y,
                      QGraphicsItem* parent)
     : QGraphicsRectItem(0, 0, pxWidth, pxHeight, parent),
-      state_(rand()%3 ? WATER : BOAT)
+      state_(WATER),
+      x(x), y(y)
 {
     setPos(pxX, pxY);
     setPen(QPen(Qt::NoPen));
     updateColor();
 }
 
-bool PlayField::itemMarked()
+bool PlayField::markItem()
 {
     if(state_ == BOAT || state_ == HITTED_BOAT)
         return setState(HITTED_BOAT);
@@ -34,11 +36,17 @@ void PlayField::mousePressEvent(QGraphicsSceneMouseEvent* event)
     PlayArea* area = dynamic_cast<PlayArea*>(parentItem());
     assert(area != NULL);
 
-    if(area->isHittable())
-    {
-      if(itemMarked())
-        area->hitted();
-    }
+    area->hitField(x, y);
+}
+
+bool PlayField::isLiveBoat()
+{
+  return (state_ == BOAT);
+}
+
+bool PlayField::isDeadBoat()
+{
+  return (state_ == HITTED_BOAT);
 }
 
 bool PlayField::setState(FieldState newState)
