@@ -197,20 +197,6 @@ void PlayArea::hitField(int x, int y)
   {
     gameState_->showUserMessage("Hit & down!");
     revealSunked(x,y);
-  }
-
-  if((x+1 >= (int)width_  || !fields_[x+1][y]->isLiveBoat()) &&
-     (x-1 < 0             || !fields_[x-1][y]->isLiveBoat()) &&
-     (y+1 >= (int)height_ || !fields_[x][y+1]->isLiveBoat()) &&
-     (y-1 < 0             || !fields_[x][y-1]->isLiveBoat()))
-  {
-    /*ZATOPIONY*/
-    for(int i = -1; i <= 1; ++i)
-      for(int j = -1; j <= 1; ++j)
-      {
-        hitField(x+i, y+j);
-      }
-
     if(isGameFinished())
       gameState_->currentPlayerWon();
   }
