@@ -25,6 +25,7 @@ public:
   void showUserMessage(const QString& msg);
 
   bool isCurrentPlacingFinished();
+  bool isAnyHittable();
   bool consumeMast(PlayArea*);
 
 public slots:

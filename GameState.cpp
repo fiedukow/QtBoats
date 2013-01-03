@@ -126,6 +126,12 @@ bool GameState::isCurrentPlacingFinished()
   return (currentList->empty() && currentMasts == 0);
 }
 
+bool GameState::isAnyHittable()
+{
+  assert(currentState_ == State::WAR);
+  return (player1Area->isHittable() || player2Area->isHittable());
+}
+
 void GameState::endOfTurn()
 {
     switch(currentState_)
@@ -140,6 +146,7 @@ void GameState::endOfTurn()
       switch(currentTurn_)
       {
       case Turn::PLAYER_2:
+        player1Area->setHittable(false);
         currentState_ = nextState(currentState_);
         endOfTurn();
         return;
@@ -153,10 +160,16 @@ void GameState::endOfTurn()
       currentTurn_ = nextTurn(currentTurn_);
     break;
     case State::WAR:
-        currentTurn_ = nextTurn(currentTurn_);
-        break;
+      if(isAnyHittable() &&
+         (currentTurn_ == Turn::PLAYER_1 || currentTurn_ == Turn::PLAYER_2))
+      {
+        showUserMessage("You can still make a shot.");
+        return;
+      }
+      currentTurn_ = nextTurn(currentTurn_);
+      break;
     default:
-        break;
+      break;
     }
 }
 

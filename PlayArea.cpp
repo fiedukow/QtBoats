@@ -22,7 +22,7 @@ PlayArea::PlayArea(uint width, uint height,
     height_(height),
     fieldMargin_(fieldMargin),
     fields_(width, height),
-    hittable_(true),
+    hittable_(false),
     gameState_(gameState)
 {
     setPos(pxX, pxY);
@@ -119,6 +119,47 @@ void PlayArea::resetBoat()
   currentBoat_.clear();
 }
 
+bool PlayArea::isSunked(int x, int y, std::list< std::pair<int,int> > stack)
+{
+  if(x < 0 || x >= (int)width_ || y < 0 || y >= (int)height_)
+    return true;
+
+  if(std::find(stack.begin(), stack.end(), std::pair<int,int>(x,y))
+     != stack.end())
+    return true;
+
+  stack.push_back(std::pair<int,int>(x,y));
+
+  return (fields_[x][y]->isDeadBoat()
+          && isSunked(x+1, y   , stack)
+          && isSunked(x-1, y   , stack)
+          && isSunked(x  , y+1 , stack)
+          && isSunked(x  , y-1 , stack))
+         ||
+         (!fields_[x][y]->isLiveBoat()
+          && !fields_[x][y]->isDeadBoat());
+}
+
+void PlayArea::revealSunked(int x, int y, std::list< std::pair<int,int> > stack)
+{
+  if(x < 0 || x >= (int)width_ || y < 0 || y >= (int)height_)
+    return;
+
+  if(std::find(stack.begin(), stack.end(), std::pair<int,int>(x,y))
+     != stack.end())
+    return;
+
+  fields_[x][y]->markItem();
+  stack.push_back(std::pair<int,int>(x,y));
+
+  if(fields_[x][y]->isDeadBoat())
+  {
+    for(int i = -1; i <= 1; ++i)
+      for(int j = -1; j <= 1; ++j)
+        revealSunked(x+i, y+j , stack);
+  }
+}
+
 void PlayArea::hitField(int x, int y)
 {
   if(x < 0 || x >= (int)width_ || y < 0 || y >= (int)height_)
@@ -141,6 +182,13 @@ void PlayArea::hitField(int x, int y)
 
   /*TRAFIONY*/
   gameState_->showUserMessage("Hit!");
+  setHittable(true);
+
+  if(isSunked(x,y))
+  {
+    gameState_->showUserMessage("Hit & down!");
+    revealSunked(x,y);
+  }
 
   if((x+1 >= (int)width_  || !fields_[x+1][y]->isLiveBoat()) &&
      (x-1 < 0             || !fields_[x-1][y]->isLiveBoat()) &&
@@ -148,7 +196,6 @@ void PlayArea::hitField(int x, int y)
      (y-1 < 0             || !fields_[x][y-1]->isLiveBoat()))
   {
     /*ZATOPIONY*/
-    gameState_->showUserMessage("Hit & down!");
     for(int i = -1; i <= 1; ++i)
       for(int j = -1; j <= 1; ++j)
         hitField(x+i, y+j);

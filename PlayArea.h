@@ -33,6 +33,14 @@ public:
     void setAsEnemy();
     void resetBoat();
 
+    void revealSunked(int x,
+                      int y,
+                      std::list< std::pair<int,int> > stack
+                                = std::list< std::pair<int,int> >());
+    bool isSunked(int x, int y,
+                  std::list< std::pair<int,int> > stack
+                            = std::list< std::pair<int,int> >());
+
 signals:
 
 public slots:
