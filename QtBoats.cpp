@@ -8,10 +8,13 @@
 
 #include "PlayArea.h"
 #include "GameState.h"
+#include "GameSettingsDialog.h"
 
 QtBoats::QtBoats(QWidget *parent)
     : QMainWindow(parent),
-      gameState_(NULL)
+      gameState_(NULL),
+      player1Name("Player 1"),
+      player2Name("Player 2")
 {
     QToolBar* mainBar = new QToolBar;
     addToolBar(mainBar);
@@ -28,6 +31,10 @@ QtBoats::QtBoats(QWidget *parent)
             SIGNAL(triggered()),
             this,
             SLOT(newGame()));
+    connect(settingsAction,
+            SIGNAL(triggered()),
+            this,
+            SLOT(openSettings()));
 
     QStatusBar* statusBar = new QStatusBar(this);
     setStatusBar(statusBar);
@@ -36,6 +43,18 @@ QtBoats::QtBoats(QWidget *parent)
     setStatusBarMessage("Welcome!");
 
     newGame();
+}
+
+void QtBoats::openSettings()
+{
+    GameSettingsDialog* settingsDialog = new GameSettingsDialog(player1Name,
+                                                                player2Name,
+                                                                this);
+    if(settingsDialog->exec() == QDialog::Accepted)
+    {
+        player1Name = settingsDialog->getPlayer1Name();
+        player2Name = settingsDialog->getPlayer2Name();
+    }
 }
 
 void QtBoats::newGame()

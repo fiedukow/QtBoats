@@ -16,10 +16,12 @@ SOURCES += main.cpp\
         QtBoats.cpp \
     PlayArea.cpp \
     PlayField.cpp \
-    GameState.cpp
+    GameState.cpp \
+    GameSettingsDialog.cpp
 
 HEADERS  += QtBoats.h \
     PlayArea.h \
     PlayField.h \
     Table2D.h \
-    GameState.h
+    GameState.h \
+    GameSettingsDialog.h

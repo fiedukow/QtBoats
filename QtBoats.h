@@ -2,6 +2,7 @@
 #define QTBOATS_H
 
 #include <QMainWindow>
+#include <QString>
 
 class QAction;
 class QGraphicsView;
@@ -22,6 +23,7 @@ public slots:
     void newGame();
     void updateScene();
     void setStatusBarMessage(const QString& msg);
+    void openSettings();
 
 private:
     QAction* newGameAction;
@@ -30,6 +32,9 @@ private:
     QGraphicsView* mainPanel_;
     GameState* gameState_;
     QLabel* statusBarLabel_;
+
+    QString player1Name;
+    QString player2Name;
 };
 
 #endif // QTBOATS_H
