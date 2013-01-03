@@ -19,6 +19,9 @@ public:
     QtBoats(QWidget *parent = 0);
     ~QtBoats();
 
+    QString getPlayer1Name();
+    QString getPlayer2Name();
+
 public slots:
     void newGame();
     void updateScene();

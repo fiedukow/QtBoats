@@ -28,6 +28,9 @@ public:
   bool isAnyHittable();
   bool consumeMast(PlayArea*);
 
+  QString getPlayer1Name();
+  QString getPlayer2Name();
+
 public slots:
   void gotoNextTurn();
   void chooseField(int x, int y, PlayArea *area);
@@ -39,6 +42,7 @@ signals:
 private:
   void endOfTurn();
   std::list<uint>* currentBoatsList();
+  PlayArea* currentArea();
 
   Turn currentTurn_;
   State currentState_;

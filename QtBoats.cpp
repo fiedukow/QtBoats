@@ -21,9 +21,11 @@ QtBoats::QtBoats(QWidget *parent)
     newGameAction = new QAction(tr("New game"), mainBar);
     nextTurnAction = new QAction(tr("Next turn"), mainBar);
     settingsAction = new QAction(tr("Settings"), mainBar);
+    QAction* exitAction = new QAction(tr("Exit"), mainBar);
     mainBar->addAction(newGameAction);
     mainBar->addAction(nextTurnAction);
     mainBar->addAction(settingsAction);
+    mainBar->addAction(exitAction);
     mainPanel_ = new QGraphicsView(this);
     setCentralWidget(mainPanel_);
 
@@ -35,6 +37,10 @@ QtBoats::QtBoats(QWidget *parent)
             SIGNAL(triggered()),
             this,
             SLOT(openSettings()));
+    connect(exitAction,
+            SIGNAL(triggered()),
+            this,
+            SLOT(close()));
 
     QStatusBar* statusBar = new QStatusBar(this);
     setStatusBar(statusBar);
@@ -43,6 +49,16 @@ QtBoats::QtBoats(QWidget *parent)
     setStatusBarMessage("Welcome!");
 
     newGame();
+}
+
+QString QtBoats::getPlayer1Name()
+{
+    return player1Name;
+}
+
+QString QtBoats::getPlayer2Name()
+{
+    return player2Name;
 }
 
 void QtBoats::openSettings()

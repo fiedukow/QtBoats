@@ -67,15 +67,34 @@ void GameState::showUserMessage(const QString& msg)
   gameWindow->setStatusBarMessage(msg);
 }
 
+PlayArea* GameState::currentArea()
+{
+  switch(currentTurn_)
+  {
+  case Turn::PLAYER_1:
+  case Turn::WAITING_PLAYER_1:
+    return player1Area;
+  break;
+  case Turn::PLAYER_2:
+  case Turn::WAITING_PLAYER_2:
+    return player2Area;
+    break;
+  default:
+    assert(false);
+  }
+}
+
 void GameState::chooseField(int x, int y, PlayArea* area)
 {
   switch(currentState_)
   {
   case State::BOATS_PLACING:
-    area->placeBoat(x, y);
+    if(area == currentArea())
+      area->placeBoat(x, y);
   break;
   case State::WAR:
-    area->hitField(x, y);
+    if(area != currentArea())
+      area->hitField(x, y);
   break;
   default:
   break;
@@ -140,10 +159,10 @@ void GameState::currentPlayerWon()
   switch(currentTurn_)
   {
   case Turn::PLAYER_1:
-    showUserMessage("PLAYER 1 WON!");
+      showUserMessage("The winner is " + getPlayer1Name());
     break;
   case Turn::PLAYER_2:
-    showUserMessage("PLAYER 2 WON!");
+      showUserMessage("The winner is " + getPlayer2Name());
     break;
   default:
     assert(false);
@@ -151,6 +170,20 @@ void GameState::currentPlayerWon()
   currentState_ = nextState(currentState_);
   player1Area->setAsAlly();
   player2Area->setAsAlly();
+}
+
+QString GameState::getPlayer1Name()
+{
+  QtBoats* gameWindow = dynamic_cast<QtBoats*>(parent());
+  assert(gameWindow != NULL);
+  return gameWindow->getPlayer1Name();
+}
+
+QString GameState::getPlayer2Name()
+{
+  QtBoats* gameWindow = dynamic_cast<QtBoats*>(parent());
+  assert(gameWindow != NULL);
+  return gameWindow->getPlayer2Name();
 }
 
 void GameState::endOfTurn()
@@ -211,10 +244,10 @@ void GameState::gotoNextTurn()
     player2Area->setAsAlly();
     break;
   case Turn::PLAYER_1:
-    waitingMessage->setHtml("<strong style=\"font-size: 24px; color: black;\">Waiting for Player 2</strong>");
+    waitingMessage->setHtml("<strong style=\"font-size: 24px; color: black;\">Waiting for " + getPlayer2Name() + "</strong>");
     break;
   case Turn::PLAYER_2:
-    waitingMessage->setHtml("<strong style=\"font-size: 24px; color: black;\">Waiting for Player 1</strong>");
+    waitingMessage->setHtml("<strong style=\"font-size: 24px; color: black;\">Waiting for " + getPlayer1Name() + "</strong>");
     break;
   }
 
