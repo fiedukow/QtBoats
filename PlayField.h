@@ -17,8 +17,11 @@ public:
     bool markItem();
     void setHidden(bool hidden);
 
+    void placeBoat();
+
     bool isLiveBoat();
     bool isDeadBoat();
+    bool isWater();
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent* event);

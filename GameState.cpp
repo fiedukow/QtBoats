@@ -8,7 +8,8 @@
 GameState::GameState(QObject* parent)
   : QObject(parent),
     currentTurn_(Turn::WAITING_PLAYER_1),
-    currentState_(State::WAR)
+    currentState_(State::BOATS_PLACING),
+    currentMasts(0)
 {
   scene = new QGraphicsScene(parent);
   sceneWaiting = new QGraphicsScene(parent);
@@ -23,11 +24,32 @@ GameState::GameState(QObject* parent)
   waitingMessage = new QGraphicsTextItem(NULL);
   sceneWaiting->addItem(waitingMessage);
 
+  giveBoatsToPlayers();
+
   gotoNextTurn();
 }
 
 GameState::~GameState()
 {}
+
+void GameState::giveBoatsToPlayers()
+{
+  player1Boats.push_back(4);
+  player1Boats.push_back(3);
+  player1Boats.push_back(3);
+  player1Boats.push_back(2);
+  player1Boats.push_back(2);
+  player1Boats.push_back(1);
+  player1Boats.push_back(1);
+
+  player2Boats.push_back(4);
+  player2Boats.push_back(3);
+  player2Boats.push_back(3);
+  player2Boats.push_back(2);
+  player2Boats.push_back(2);
+  player2Boats.push_back(1);
+  player2Boats.push_back(1);
+}
 
 QGraphicsScene* GameState::getScene()
 {
@@ -45,14 +67,90 @@ void GameState::showUserMessage(const QString& msg)
   gameWindow->setStatusBarMessage(msg);
 }
 
+void GameState::chooseField(int x, int y, PlayArea* area)
+{
+  switch(currentState_)
+  {
+  case State::BOATS_PLACING:
+    area->placeBoat(x, y);
+  break;
+  case State::WAR:
+    area->hitField(x, y);
+  break;
+  }
+}
+
+std::list<uint>* GameState::currentBoatsList()
+{
+  switch(currentTurn_)
+  {
+  case Turn::PLAYER_1:
+  case Turn::WAITING_PLAYER_1:
+    return &player1Boats;
+    break;
+  case Turn::PLAYER_2:
+  case Turn::WAITING_PLAYER_2:
+    return &player2Boats;
+    break;
+  default:
+    assert(false);
+  }
+}
+
+bool GameState::consumeMast(PlayArea* area)
+{
+  assert(currentState_ == State::BOATS_PLACING);
+  std::list<uint>* currentList = currentBoatsList();
+
+  if(currentMasts <= 0)
+    return false;
+
+  --currentMasts;
+
+  if(currentMasts != 0)
+    return true;
+
+  area->resetBoat();
+  if(currentList->size() <= 0)
+    return true;
+
+  currentMasts = currentList->front();
+  currentList->pop_front();
+  return true;
+}
+
+bool GameState::isCurrentPlacingFinished()
+{
+  assert(currentState_ == State::BOATS_PLACING);
+  std::list<uint>* currentList = currentBoatsList();
+  return (currentList->empty() && currentMasts == 0);
+}
+
 void GameState::endOfTurn()
 {
     switch(currentState_)
     {
     case State::BOATS_PLACING:
-        if(currentTurn_ == Turn::PLAYER_2)
-            currentState_ = nextState(currentState_);
+      if(!isCurrentPlacingFinished() &&
+         (currentTurn_ == Turn::PLAYER_1 || currentTurn_ == Turn::PLAYER_2))
+      {
+        showUserMessage("Placing boats is not finished yet.");
+        return;
+      }
+      switch(currentTurn_)
+      {
+      case Turn::PLAYER_2:
+        currentState_ = nextState(currentState_);
         endOfTurn();
+        return;
+      case Turn::WAITING_PLAYER_1:
+      case Turn::WAITING_PLAYER_2:
+        currentMasts = currentBoatsList()->front();
+        currentBoatsList()->pop_front();
+      default:
+        break;
+      }
+      currentTurn_ = nextTurn(currentTurn_);
     break;
     case State::WAR:
         currentTurn_ = nextTurn(currentTurn_);
@@ -104,7 +202,6 @@ GameState::Turn GameState::nextTurn(Turn currentTurn)
   return Turn::PLAYER_1;
 }
 
-//  enum class State { BOATS_PLACING, WAR, END_OF_GAME };
 GameState::State GameState::nextState(State currentState)
 {
   switch(currentState)

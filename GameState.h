@@ -3,6 +3,7 @@
 
 #include "PlayArea.h"
 #include <QObject>
+#include <list>
 
 class QGraphicsTextItem;
 
@@ -18,25 +19,35 @@ public:
   explicit GameState(QObject* parent = NULL);
   ~GameState();
 
+  void giveBoatsToPlayers();
+
   QGraphicsScene* getScene();
   void showUserMessage(const QString& msg);
 
+  bool isCurrentPlacingFinished();
+  bool consumeMast(PlayArea*);
+
 public slots:
   void gotoNextTurn();
+  void chooseField(int x, int y, PlayArea *area);
 
 signals:
   void sceneChanged();
 
 private:
   void endOfTurn();
+  std::list<uint>* currentBoatsList();
 
   Turn currentTurn_;
   State currentState_;
   PlayArea* player1Area;
   PlayArea* player2Area;
+  std::list<uint> player1Boats;
+  std::list<uint> player2Boats;
   QGraphicsScene* scene;
   QGraphicsScene* sceneWaiting;
   QGraphicsTextItem* waitingMessage;
+  uint currentMasts;
 
 public: //enums
   enum class Turn { PLAYER_1, WAITING_PLAYER_1, PLAYER_2, WAITING_PLAYER_2 };

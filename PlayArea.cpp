@@ -54,6 +54,62 @@ void PlayArea::setHiddenShips(bool hidden)
   }
 }
 
+void PlayArea::chooseField(int x, int y)
+{
+  gameState_->chooseField(x, y, this);
+}
+
+void PlayArea::placeBoat(int x, int y)
+{
+  bool acceptablePlace = currentBoat_.empty();
+
+  for(Boat::const_iterator i = currentBoat_.begin();
+      i != currentBoat_.end() && !acceptablePlace;
+      ++i)
+  {
+    if((i->first == x+1 && i->second == y  ) ||
+       (i->first == x-1 && i->second == y  ) ||
+       (i->first == x   && i->second == y+1) ||
+       (i->first == x   && i->second == y-1))
+    {
+      acceptablePlace = true;
+    }
+  }
+
+  acceptablePlace = (acceptablePlace && fields_[x][y]->isWater());
+
+  bool hasColision = false;
+
+  for(int i = -1; i <= 1; ++i)
+    for(int j = -1; j <= 1; ++j)
+    {
+      bool found = (std::find(currentBoat_.begin(),
+                              currentBoat_.end(),
+                              std::pair<int,int>(x,y)) != currentBoat_.end());
+      hasColision = (hasColision ||
+                    (!fields_[x][y]->isWater() && !found));
+    }
+
+  bool possibleToAdd = (acceptablePlace && !hasColision);
+
+  if(!possibleToAdd)
+  {
+    gameState_->showUserMessage("You cannot place this mast here.");
+  }
+  else
+  {
+    if(gameState_->consumeMast(this))
+      fields_[x][y]->placeBoat();
+    else
+      gameState_->showUserMessage("No more ships.");
+  }
+}
+
+void PlayArea::resetBoat()
+{
+  currentBoat_.clear();
+}
+
 void PlayArea::hitField(int x, int y)
 {
   if(x < 0 || x >= (int)width_ || y < 0 || y >= (int)height_)

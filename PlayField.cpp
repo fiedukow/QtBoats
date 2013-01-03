@@ -36,7 +36,12 @@ void PlayField::mousePressEvent(QGraphicsSceneMouseEvent* event)
     PlayArea* area = dynamic_cast<PlayArea*>(parentItem());
     assert(area != NULL);
 
-    area->hitField(x, y);
+    area->chooseField(x, y);
+}
+
+void PlayField::placeBoat()
+{
+  setState(BOAT);
 }
 
 bool PlayField::isLiveBoat()
@@ -47,6 +52,11 @@ bool PlayField::isLiveBoat()
 bool PlayField::isDeadBoat()
 {
   return (state_ == HITTED_BOAT);
+}
+
+bool PlayField::isWater()
+{
+  return (state_ == WATER);
 }
 
 bool PlayField::setState(FieldState newState)
