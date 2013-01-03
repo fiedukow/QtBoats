@@ -83,11 +83,14 @@ void PlayArea::placeBoat(int x, int y)
   for(int i = -1; i <= 1; ++i)
     for(int j = -1; j <= 1; ++j)
     {
+      if(x+i >= (int)width_ || y+j >= (int)height_ || x+i < 0 || y+j < 0)
+        continue;
+
       bool found = (std::find(currentBoat_.begin(),
                               currentBoat_.end(),
-                              std::pair<int,int>(x,y)) != currentBoat_.end());
+                              std::pair<int,int>(x+i,y+j)) != currentBoat_.end());
       hasColision = (hasColision ||
-                    (!fields_[x][y]->isWater() && !found));
+                    (!fields_[x+i][y+j]->isWater() && !found));
     }
 
   bool possibleToAdd = (acceptablePlace && !hasColision);
@@ -98,10 +101,16 @@ void PlayArea::placeBoat(int x, int y)
   }
   else
   {
+    currentBoat_.push_back(std::pair<int,int>(x,y));
     if(gameState_->consumeMast(this))
+    {
       fields_[x][y]->placeBoat();
+    }
     else
+    {
+      currentBoat_.pop_back();
       gameState_->showUserMessage("No more ships.");
+    }
   }
 }
 
