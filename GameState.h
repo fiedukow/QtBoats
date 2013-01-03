@@ -6,6 +6,7 @@
 #include <list>
 
 class QGraphicsTextItem;
+class QtBoats;
 
 class GameState : public QObject
 {
@@ -22,7 +23,10 @@ public:
   void giveBoatsToPlayers();
 
   QGraphicsScene* getScene();
+  QGraphicsRectItem* getPlayground();
   void showUserMessage(const QString& msg);
+  QtBoats* getGameWindow();
+  void setPerfectSizeOfArea();
 
   bool isCurrentPlacingFinished();
   bool isAnyHittable();
@@ -54,6 +58,9 @@ private:
   QGraphicsScene* sceneWaiting;
   QGraphicsTextItem* waitingMessage;
   uint currentMasts;
+  QGraphicsRectItem* playground;
+  int size;
+  int space;
 
 public: //enums
   enum class Turn { PLAYER_1, WAITING_PLAYER_1, PLAYER_2, WAITING_PLAYER_2 };

@@ -19,7 +19,7 @@ public:
              qreal pxWidth, qreal pxHeight,
              qreal fieldMargin,
              GameState* gameState,
-             QGraphicsItem *parent = 0
+             QGraphicsItem* parent = 0
              );
 
     void setHiddenShips(bool);

@@ -21,12 +21,18 @@ public:
 
     QString getPlayer1Name();
     QString getPlayer2Name();
+    int wholeWidth();
+    int wholeHeight();
 
 public slots:
     void newGame();
     void updateScene();
     void setStatusBarMessage(const QString& msg);
     void openSettings();
+
+protected:
+    virtual void resizeEvent(QResizeEvent * event);
+    virtual void showEvent(QShowEvent* event);
 
 private:
     QAction* newGameAction;

@@ -27,6 +27,7 @@ QtBoats::QtBoats(QWidget *parent)
     mainBar->addAction(settingsAction);
     mainBar->addAction(exitAction);
     mainPanel_ = new QGraphicsView(this);
+    mainPanel_->setMinimumSize(600, 300);
     setCentralWidget(mainPanel_);
 
     connect(newGameAction,
@@ -49,6 +50,16 @@ QtBoats::QtBoats(QWidget *parent)
     setStatusBarMessage("Welcome!");
 
     newGame();
+}
+
+int QtBoats::wholeWidth()
+{
+    return mainPanel_->width();
+}
+
+int QtBoats::wholeHeight()
+{
+    return mainPanel_->height();
 }
 
 QString QtBoats::getPlayer1Name()
@@ -101,7 +112,21 @@ void QtBoats::setStatusBarMessage(const QString& msg)
   statusBarLabel_->setText(msg);
 }
 
+void QtBoats::resizeEvent(QResizeEvent* event)
+{
+    QMainWindow::resizeEvent(event);
+    mainPanel_->fitInView(gameState_->getPlayground(), Qt::KeepAspectRatio);
+}
+
+void QtBoats::showEvent(QShowEvent * event)
+{
+    QMainWindow::showEvent(event);
+    mainPanel_->fitInView(gameState_->getPlayground(), Qt::KeepAspectRatio);
+}
+
+
 QtBoats::~QtBoats()
 {
     delete gameState_;
 }
+

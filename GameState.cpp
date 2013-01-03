@@ -1,25 +1,31 @@
 #include "GameState.h"
 #include "QtBoats.h"
 #include <QGraphicsScene>
+#include <QGraphicsItem>
 #include <QImage>
 
 #include <cassert>
+#define base_size 400
+#define base_space 50
+#define base_margin 20
 
 GameState::GameState(QObject* parent)
   : QObject(parent),
     currentTurn_(Turn::WAITING_PLAYER_1),
     currentState_(State::BOATS_PLACING),
-    currentMasts(0)
+    currentMasts(0),
+    size(base_size),
+    space(base_space)
 {
   scene = new QGraphicsScene(parent);
   sceneWaiting = new QGraphicsScene(parent);
   scene->setBackgroundBrush(QBrush(QImage("../resources/water.png")));
   sceneWaiting->setBackgroundBrush(QBrush(QImage("../resources/water.png")));
 
-  player1Area = new PlayArea(10, 10, 0, 0, 400, 400, 20, this);
-  player2Area = new PlayArea(10, 10, 450, 0, 400, 400, 20, this);
-  scene->addItem(player1Area);
-  scene->addItem(player2Area);
+  playground = new QGraphicsRectItem(0,0, base_size*2+base_space+base_margin*2, base_size+base_margin*2, NULL);
+  player1Area = new PlayArea(10, 10, 0, 0, base_size, base_size, 20, this, playground);
+  player2Area = new PlayArea(10, 10, base_size+base_space, 0, base_size, base_size, base_margin, this, playground);
+  scene->addItem(playground);
 
   waitingMessage = new QGraphicsTextItem(NULL);
   sceneWaiting->addItem(waitingMessage);
@@ -31,6 +37,35 @@ GameState::GameState(QObject* parent)
 
 GameState::~GameState()
 {}
+
+QGraphicsRectItem* GameState::getPlayground()
+{
+    return playground;
+}
+
+QtBoats* GameState::getGameWindow()
+{
+    QtBoats* gameWindow = dynamic_cast<QtBoats*>(parent());
+    assert(gameWindow != NULL);
+    return gameWindow;
+}
+
+void GameState::setPerfectSizeOfArea()
+{
+    QtBoats* gameWindow = getGameWindow();
+    int w = gameWindow->wholeWidth();
+    int h = gameWindow->wholeHeight();
+    int baseWidth = size*2;
+    int baseHeight = size;
+    double horizontalScale = (double)w/(double)baseWidth;
+    double verticalScale = (double)h/(double)baseHeight;
+
+    double scale = std::min(horizontalScale, verticalScale)*0.6;
+    size*=scale;
+    space*=scale;
+
+    playground->scale(scale, scale);
+}
 
 void GameState::giveBoatsToPlayers()
 {
